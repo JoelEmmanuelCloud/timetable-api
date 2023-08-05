@@ -12,8 +12,8 @@ const logout = async (req: Request, res: Response): Promise<void> => {
     res.send('logout');
 };
 
-export default {
+export {
     register,
     login,
-    logout,
+    logout
 };
