@@ -8,6 +8,7 @@ export enum AcademyRole {
 }
 
 export interface IUser extends Document {
+  userId: string;
   name: string;
   email: string;
   password: string;
