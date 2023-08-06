@@ -1,7 +1,7 @@
 import { Document } from 'mongoose';
 
 export enum AcademyRole {
-    Lecturer = 'lecturer',
+    TimetableOfficer = 'timetable officer',
     Student = 'student',
 }
 

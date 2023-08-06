@@ -30,9 +30,9 @@ const UserSchema = new mongoose.Schema<IUser>(
             minlength: 6,
         },
         academyRole: {
-            type: String,
-            enum: [AcademyRole.Lecturer, AcademyRole.Student],
-            default: AcademyRole.Student,
+          type: String,
+          enum: [AcademyRole.TimetableOfficer, AcademyRole.Student],
+          default: AcademyRole.Student,
         },
     },
     { timestamps: true },
