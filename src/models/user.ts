@@ -1,20 +1,8 @@
-import mongoose, { Document, Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
+import { IUser, AcademyRole } from '../interfaces/userTypes';
 
-export enum AcademyRole {
-  Lecturer = 'lecturer',
-  Student = 'student',
-}
-
-export interface IUser extends Document {
-  userId: string;
-  name: string;
-  email: string;
-  password: string;
-  academyRole: AcademyRole;
-  comparePassword(candidatePassword: string): Promise<boolean>;
-}
 
 const isEmailValidator = (value: string) => {
   return validator.isEmail(value);
