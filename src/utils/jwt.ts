@@ -1,5 +1,9 @@
 import jwt from 'jsonwebtoken';
-import { Payload, Response } from '../interfaces/authTypes';
+import { Response } from '../interfaces/authTypes';
+
+import {User} from '../interfaces/userTypes'
+
+type Payload = User
 
 const createJWT = ({ payload }: { payload: Payload }): string => {
   const token = jwt.sign(payload, process.env.JWT_SECRET!, {
