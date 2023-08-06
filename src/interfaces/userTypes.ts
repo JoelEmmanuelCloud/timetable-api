@@ -3,7 +3,7 @@ import { Document } from 'mongoose';
 export enum AcademyRole {
     Lecturer = 'lecturer',
     Student = 'student',
-  }
+}
   
 
   export interface IUser extends Document {
