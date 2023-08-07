@@ -3,30 +3,40 @@ import { StatusCodes } from 'http-status-codes';
 import { attachCookiesToResponse, createTokenUser } from '../utils';
 import User from '../models/user';
 import CustomError from '../errors';
+import { AcademyRole } from '../interfaces/userTypes';
 
 
 const register = async (req: Request, res: Response): Promise<void> => {
-  const { name, email, password } = req.body;
-
-  const emailAlreadyExists = await User.findOne({ email });
-  if (emailAlreadyExists) {
-    throw new CustomError.BadRequestError('Email already exists');
-  }
-
-  const isFirstAccount = (await User.countDocuments({})) === 0;
-  const academyRole = isFirstAccount ? 'timetableOfficer' : 'student';
-
-  const user = await User.create({ name, email, password, academyRole });
-  const userObject = user.toJSON();
-
-  const tokenUser = createTokenUser(userObject);
-
+    const { name, email, password, academyRole } = req.body;
   
-  attachCookiesToResponse({ res, user: tokenUser });
-  const token = req.signedCookies.token
+    const emailAlreadyExists = await User.findOne({ email });
+    if (emailAlreadyExists) {
+      throw new CustomError.BadRequestError('Email already exists');
+    }
+  
+    if (academyRole === AcademyRole.TimetableOfficer) {
+      
+      const existingTimetableOfficer = await User.findOne({ academyRole: AcademyRole.TimetableOfficer });
+      if (existingTimetableOfficer) {
+        throw new CustomError.BadRequestError('A Timetable Officer account already exists');
+      }
+    }
 
-  res.status(StatusCodes.CREATED).json({ user: userObject });
-};
+    if (![AcademyRole.Student, AcademyRole.Lecturer, AcademyRole.TimetableOfficer].includes(academyRole)) {
+      throw new CustomError.BadRequestError('Invalid academy role');
+    }
+  
+    const user = await User.create({ name, email, password, academyRole });
+    const userObject = user.toJSON();
+  
+    const tokenUser = createTokenUser(userObject);
+  
+    attachCookiesToResponse({ res, user: tokenUser });
+  
+    res.status(StatusCodes.CREATED).json({ user: userObject });
+  };
+  
+
 
 
 

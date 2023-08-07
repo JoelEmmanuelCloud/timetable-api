@@ -1,12 +1,5 @@
 import { AcademyRole } from "./userTypes";
 
-
-export interface Payload {
-    userId: string;
-    name: string;
-    email: string;
-    academyRole: AcademyRole;
-  }
   
   interface CookieOptions {
     httpOnly: boolean;
