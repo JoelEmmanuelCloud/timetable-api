@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { Response } from '../interfaces/authTypes';
 
-import {User} from '../interfaces/userTypes'
+import {User} from '../interfaces/index'
 
 type Payload = User
 

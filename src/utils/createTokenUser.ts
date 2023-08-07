@@ -1,4 +1,4 @@
-import {User} from '../interfaces/userTypes'; 
+import {User} from '../interfaces/index'; 
 
 const createTokenUser = (user: User): User => {
   return { ...user };

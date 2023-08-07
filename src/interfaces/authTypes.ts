@@ -1,7 +1,4 @@
-import { AcademyRole } from "./userTypes";
-
-  
-  interface CookieOptions {
+    interface CookieOptions {
     httpOnly: boolean;
     expires: Date;
     secure: boolean;

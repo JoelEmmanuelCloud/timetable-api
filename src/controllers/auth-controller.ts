@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import { attachCookiesToResponse, createTokenUser } from '../utils';
 import User from '../models/user';
 import CustomError from '../errors';
-import { AcademyRole } from '../interfaces/userTypes';
+import { AcademyRole } from '../interfaces/index';
 
 
 const register = async (req: Request, res: Response): Promise<void> => {
