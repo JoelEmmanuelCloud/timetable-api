@@ -1,10 +1,9 @@
-import 'express-async-errors';
+import cookieParser from 'cookie-parser';
 import express from 'express';
 import connectDB from './db/connect';
 import dotenv from 'dotenv';
 import notFoundMiddleware from './middleware/not-found';
 import errorHandlerMiddleware from './middleware/error-handler';
-import cookieParser, { signedCookie } from 'cookie-parser';
 import authRouter from './routes/auth-route';
 import morgan from 'morgan';
 

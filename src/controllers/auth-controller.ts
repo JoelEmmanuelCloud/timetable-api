@@ -1,6 +1,6 @@
-import { Request, Response } from 'express'; // If you are using Express for your app
+import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { attachCookiesToResponse, createTokenUser, createJWT } from '../utils';
+import { attachCookiesToResponse, createTokenUser } from '../utils';
 import User from '../models/user';
 import CustomError from '../errors';
 
@@ -19,10 +19,11 @@ const register = async (req: Request, res: Response): Promise<void> => {
   const user = await User.create({ name, email, password, academyRole });
   const tokenUser = createTokenUser(user);
 
-
+  
   const userObject = user.toJSON();
-
   attachCookiesToResponse({ res, user: tokenUser });
+  const token = req.signedCookies.token
+
   res.status(StatusCodes.CREATED).json({ user: userObject });
 };
 
