@@ -1,4 +1,4 @@
-import { User } from './interfaces/userTypes';
+import { User } from './interfaces';
 import { Request } from 'express';
 
 declare module 'express' {

@@ -1,6 +1,6 @@
 import CustomError from '../errors';
 
-import { User as IUser, AcademyRole } from '../interfaces/index';
+import { User as IUser, AcademyRole } from '../interfaces';
 
 const checkPermissions = (requestUser: IUser, resourceUserId: string): void => {
   // console.log(requestUser);
