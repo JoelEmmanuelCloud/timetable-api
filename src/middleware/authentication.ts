@@ -1,15 +1,8 @@
 import CustomError from '../errors';
 import { AcademyRole } from '../interfaces';
 import { isTokenValid } from '../utils';
-import { Request, Response, NextFunction } from 'express';
-
-interface ExtendedRequest extends Request {
-  user?: {
-    name: string;
-    userId: string;
-    academyRole: AcademyRole;
-  };
-}
+import { Response, NextFunction } from 'express';
+import { ExtendedRequest } from '../interfaces';
 
 const authenticateUser = async (req: ExtendedRequest, res: Response, next: NextFunction): Promise<void> => {
   const token = req.signedCookies.token;

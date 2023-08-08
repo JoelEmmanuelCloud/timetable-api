@@ -2,11 +2,14 @@ import { StatusCodes } from 'http-status-codes';
 import { Request, Response } from 'express';
 import CustomError from '../errors';
 import User from '../models/user';
+import { ExtendedRequest } from '../interfaces';
 import {
   createTokenUser,
   attachCookiesToResponse,
   checkPermissions,
 } from '../utils';
+
+
 
 const getAllUsers = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -35,13 +38,13 @@ const getAllUsers = async (req: Request, res: Response): Promise<void> => {
 //   res.status(StatusCodes.OK).json({ user });
 // };
 
-// const showCurrentUser = async (req: Request, res: Response): Promise<void> => {
-//   if (!req.user) {
-//     throw new CustomError.UnauthenticatedError('User not authenticated');
-//   }
+const showCurrentUser = async (req: ExtendedRequest, res: Response): Promise<void> => {
+  if (!req.user) {
+    throw new CustomError.UnauthenticatedError('User not authenticated');
+  }
 
-//   res.status(StatusCodes.OK).json({ user: req.user });
-// };
+  res.status(StatusCodes.OK).json({ user: req.user });
+};
 
 // const updateUser = async (req: Request, res: Response): Promise<void> => {
 //   const { email, name } = req.body;
@@ -98,7 +101,7 @@ const getAllUsers = async (req: Request, res: Response): Promise<void> => {
 export {
   getAllUsers,
 //   getSingleUser,
-//   showCurrentUser,
+  showCurrentUser,
 //   updateUser,
 //   updateUserPassword,
 };

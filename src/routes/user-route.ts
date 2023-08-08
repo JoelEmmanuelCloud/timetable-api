@@ -2,7 +2,7 @@ import express from 'express';
 import {
   getAllUsers,
   // getSingleUser,
-  // showCurrentUser,
+  showCurrentUser,
   // updateUser,
   // updateUserPassword,
 } from '../controllers/user-controller';
@@ -18,7 +18,7 @@ router
   .route('/')
   .get(authenticateUser, authorizePermissions(AcademyRole.TimetableOfficer), getAllUsers);
 
-// router.route('/showMe').get(authenticateUser, showCurrentUser);
+router.route('/showUser').get(authenticateUser, showCurrentUser);
 // router.route('/updateUser').patch(authenticateUser, updateUser);
 // router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword);
 
