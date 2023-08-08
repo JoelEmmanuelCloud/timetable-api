@@ -4,6 +4,7 @@ import { isTokenValid } from '../utils';
 import { Response, NextFunction } from 'express';
 import { ExtendedRequest } from '../interfaces';
 
+
 const authenticateUser = async (req: ExtendedRequest, res: Response, next: NextFunction): Promise<void> => {
   const token = req.signedCookies.token;
 
