@@ -1,10 +1,17 @@
 import CustomError from '../errors';
 import { AcademyRole } from '../interfaces';
 import { isTokenValid } from '../utils';
-
 import { Request, Response, NextFunction } from 'express';
 
-const authenticateUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+interface ExtendedRequest extends Request {
+  user?: {
+    name: string;
+    userId: string;
+    academyRole: AcademyRole;
+  };
+}
+
+const authenticateUser = async (req: ExtendedRequest, res: Response, next: NextFunction): Promise<void> => {
   const token = req.signedCookies.token;
 
   if (!token) {
@@ -21,7 +28,7 @@ const authenticateUser = async (req: Request, res: Response, next: NextFunction)
 };
 
 const authorizePermissions = (...roles: AcademyRole[]) => {
-  return (req: Request, res: Response, next: NextFunction): void => {
+  return (req: ExtendedRequest, res: Response, next: NextFunction): void => {
     if (!req.user || !roles.includes(req.user.academyRole)) {
       throw new CustomError.UnauthorizedError(
         'Unauthorized to access this route'

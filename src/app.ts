@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import notFoundMiddleware from './middleware/not-found';
 import errorHandlerMiddleware from './middleware/error-handler';
 import authRouter from './routes/auth-route';
+import userRouter from './routes/user-route'
 import morgan from 'morgan';
 
 dotenv.config();
@@ -21,6 +22,7 @@ app.get('/api/v1', (req, res) => {
 });
 
 app.use(cookieParser(process.env.JWT_SECRET));
+app.use('/api/v1/user', userRouter);
 app.use('/api/v1/auth', authRouter);
 
 app.use(notFoundMiddleware);
