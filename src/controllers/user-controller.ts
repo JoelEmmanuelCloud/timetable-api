@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import CustomError from '../errors';
 import User from '../models/user';
 import { ExtendedRequest } from '../interfaces';
@@ -10,8 +10,7 @@ import {
 } from '../utils';
 
 
-
-const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+const getAllUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const users = await User.find({
       academyRole: { $in: ['lecturer', 'student'] }
@@ -38,7 +37,7 @@ const getAllUsers = async (req: Request, res: Response): Promise<void> => {
 //   res.status(StatusCodes.OK).json({ user });
 // };
 
-const showCurrentUser = async (req: ExtendedRequest, res: Response): Promise<void> => {
+const showCurrentUser = async (req: ExtendedRequest, res: Response, next: NextFunction): Promise<void> => {
   if (!req.user) {
     throw new CustomError.UnauthenticatedError('User not authenticated');
   }
