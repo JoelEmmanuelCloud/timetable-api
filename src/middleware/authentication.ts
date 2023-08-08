@@ -1,4 +1,5 @@
 import CustomError from '../errors';
+import { AcademyRole } from '../interfaces';
 import { isTokenValid } from '../utils';
 
 import { Request, Response, NextFunction } from 'express';
@@ -19,4 +20,15 @@ const authenticateUser = async (req: Request, res: Response, next: NextFunction)
   }
 };
 
-export default authenticateUser;
+const authorizePermissions = (...roles: AcademyRole[]) => {
+  return (req: Request, res: Response, next: NextFunction): void => {
+    if (!req.user || !roles.includes(req.user.academyRole)) {
+      throw new CustomError.UnauthorizedError(
+        'Unauthorized to access this route'
+      );
+    }
+    next();
+  };
+};
+
+export { authenticateUser, authorizePermissions };
