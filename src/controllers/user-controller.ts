@@ -94,16 +94,23 @@ const updateUserPassword = async (req: ExtendedRequest, res: Response): Promise<
     try {
       const { oldPassword, newPassword } = req.body;
       if (!oldPassword || !newPassword) {
+        
         throw new CustomError.BadRequestError('Please provide both values');
+        
       }
   
       if (!req.user) {
+        
         throw new CustomError.UnauthenticatedError('User not authenticated');
+        
       }
-  
-      const user = await User.findOne({ _id: req.user.userId });
+      const userId = req.user.userId;
+      const user = await User.findOne({ _id: userId });
   
       if (!user) {
+        console.log(user);
+        console.log(req.user);
+        console.log(req.user.userId);
         throw new CustomError.NotFoundError('User not found');
       }
   
