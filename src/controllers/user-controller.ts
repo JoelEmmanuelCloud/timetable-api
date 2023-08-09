@@ -11,16 +11,19 @@ import {
 
 
 const getAllUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-  try {
-    const users = await User.find({
-      academyRole: { $in: ['lecturer', 'student'] }
-    }).select('-password');
-    
-    res.status(StatusCodes.OK).json({ users });
-  } catch (error) {
-    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error instanceof Error ? error.message : 'An error occurred' });
-  }
+    try {
+        const users = await User.find({
+            academyRole: { $in: ['lecturer', 'student'] }
+        }).select('-password');
+
+        res.status(StatusCodes.OK).json({ users });
+    } catch (error) {
+        console.error(error); 
+
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error instanceof Error ? error.message : 'An error occurred' });
+    }
 };
+
 
 
 // const getSingleUser = async (req: Request, res: Response): Promise<void> => {
@@ -37,13 +40,25 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction): Pro
 //   res.status(StatusCodes.OK).json({ user });
 // };
 
-const showCurrentUser = async (req: ExtendedRequest, res: Response, next: NextFunction): Promise<void> => {
-  if (!req.user) {
-    throw new CustomError.UnauthenticatedError('User not authenticated');
-  }
 
-  res.status(StatusCodes.OK).json({ user: req.user });
+const showCurrentUser = async (req: ExtendedRequest, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        if (!req.user) {
+            throw new CustomError.UnauthenticatedError('User not authenticated');
+        }
+
+        res.status(StatusCodes.OK).json({ user: req.user });
+    } catch (error) {
+        console.error(error); 
+        if (error instanceof CustomError.UnauthenticatedError) {
+            res.status(StatusCodes.UNAUTHORIZED).json({ error: error.message });
+        } else {
+            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'An error occurred' });
+        }
+    }
 };
+
+
 
 // const updateUser = async (req: Request, res: Response): Promise<void> => {
 //   const { email, name } = req.body;
