@@ -1,7 +1,7 @@
 import express from 'express';
 import {
   getAllUsers,
-  // getSingleUser,
+  getSingleUser,
   showCurrentUser,
   // updateUser,
   // updateUserPassword,
@@ -22,6 +22,6 @@ router.route('/showUser').get(authenticateUser, showCurrentUser);
 // router.route('/updateUser').patch(authenticateUser, updateUser);
 // router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword);
 
-// router.route('/:id').get(authenticateUser, getSingleUser);
+router.route('/:id').get(authenticateUser, getSingleUser);
 
 export default router;

@@ -12,7 +12,7 @@ const authenticateUser = async (req: ExtendedRequest, res: Response, next: NextF
 
   if (!token) {
     res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Authentication token missing' });
-    return; // Add this line to exit the middleware
+    return; 
   }
 
   try {

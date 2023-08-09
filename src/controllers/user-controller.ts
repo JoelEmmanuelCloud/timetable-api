@@ -10,7 +10,7 @@ import {
 } from '../utils';
 
 
-const getAllUsers = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+const getAllUsers = async (req: Request, res: Response): Promise<void> => {
     try {
         const users = await User.find({
             academyRole: { $in: ['lecturer', 'student'] }
@@ -25,23 +25,26 @@ const getAllUsers = async (req: Request, res: Response, next: NextFunction): Pro
 };
 
 
+const getSingleUser = async (req: ExtendedRequest, res: Response): Promise<void> => {
+    try {
+      const user = await User.findOne({ _id: req.params.id }).select('-password');
+      if (!user) {
+        throw new CustomError.NotFoundError(`No user with id : ${req.params.id}`);
+      }
+  
+      if (!req.user) {
+        throw new CustomError.UnauthenticatedError('User not authenticated');
+      }
+  
+      checkPermissions(req.user, user._id);
+      res.status(StatusCodes.OK).json({ user });
+    } catch (error: any) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+  };
 
-// const getSingleUser = async (req: Request, res: Response): Promise<void> => {
-//   const user = await User.findOne({ _id: req.params.id }).select('-password');
-//   if (!user) {
-//     throw new CustomError.NotFoundError(`No user with id : ${req.params.id}`);
-//   }
 
-//   if (!req.user) {
-//     throw new CustomError.UnauthenticatedError('User not authenticated');
-//   }
-
-//   checkPermissions(req.user, user._id);
-//   res.status(StatusCodes.OK).json({ user });
-// };
-
-
-const showCurrentUser = async (req: ExtendedRequest, res: Response, next: NextFunction): Promise<void> => {
+const showCurrentUser = async (req: ExtendedRequest, res: Response): Promise<void> => {
     try {
         if (!req.user) {
             throw new CustomError.UnauthenticatedError('User not authenticated');
@@ -114,7 +117,7 @@ const showCurrentUser = async (req: ExtendedRequest, res: Response, next: NextFu
 
 export {
   getAllUsers,
-//   getSingleUser,
+  getSingleUser,
   showCurrentUser,
 //   updateUser,
 //   updateUserPassword,
