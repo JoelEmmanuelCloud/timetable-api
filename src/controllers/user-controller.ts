@@ -89,36 +89,42 @@ const showCurrentUser = async (req: ExtendedRequest, res: Response): Promise<voi
 //   res.status(StatusCodes.OK).json({ user: tokenUser });
 // };
 
-// const updateUserPassword = async (req: Request, res: Response): Promise<void> => {
-//   const { oldPassword, newPassword } = req.body;
-//   if (!oldPassword || !newPassword) {
-//     throw new CustomError.BadRequestError('Please provide both values');
-//   }
 
-//   if (!req.user) {
-//     throw new CustomError.UnauthenticatedError('User not authenticated');
-//   }
-
-//   const user = await User.findOne({ _id: req.user.userId });
-
-//   if (!user) {
-//     throw new CustomError.NotFoundError('User not found');
-//   }
-
-//   const isPasswordCorrect = await user.comparePassword(oldPassword);
-//   if (!isPasswordCorrect) {
-//     throw new CustomError.UnauthenticatedError('Invalid Credentials');
-//   }
-//   user.password = newPassword;
-
-//   await user.save();
-//   res.status(StatusCodes.OK).json({ msg: 'Success! Password Updated.' });
-// };
+const updateUserPassword = async (req: ExtendedRequest, res: Response): Promise<void> => {
+    try {
+      const { oldPassword, newPassword } = req.body;
+      if (!oldPassword || !newPassword) {
+        throw new CustomError.BadRequestError('Please provide both values');
+      }
+  
+      if (!req.user) {
+        throw new CustomError.UnauthenticatedError('User not authenticated');
+      }
+  
+      const user = await User.findOne({ _id: req.user.userId });
+  
+      if (!user) {
+        throw new CustomError.NotFoundError('User not found');
+      }
+  
+      const isPasswordCorrect = await user.comparePassword(oldPassword);
+      if (!isPasswordCorrect) {
+        throw new CustomError.UnauthenticatedError('Invalid Credentials');
+      }
+  
+      user.password = newPassword;
+  
+      await user.save();
+      res.status(StatusCodes.OK).json({ msg: 'Success! Password Updated.' });
+    } catch (error: any) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+  }
 
 export {
   getAllUsers,
   getSingleUser,
   showCurrentUser,
 //   updateUser,
-//   updateUserPassword,
+  updateUserPassword,
 };

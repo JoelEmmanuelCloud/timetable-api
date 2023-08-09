@@ -21,7 +21,7 @@ const authenticateUser = async (req: ExtendedRequest, res: Response, next: NextF
     req.user = { name, userId, academyRole };
     next();
   } catch (error) {
-    res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Authentication Invalid' });
+    res.status(StatusCodes.UNAUTHORIZED).json({ error:'Authentication Invalid' });
   }
 };
 

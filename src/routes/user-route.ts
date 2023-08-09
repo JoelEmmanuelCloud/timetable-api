@@ -4,7 +4,7 @@ import {
   getSingleUser,
   showCurrentUser,
   // updateUser,
-  // updateUserPassword,
+  updateUserPassword,
 } from '../controllers/user-controller';
 import {
   authenticateUser,
@@ -20,7 +20,7 @@ router
 
 router.route('/showUser').get(authenticateUser, showCurrentUser);
 // router.route('/updateUser').patch(authenticateUser, updateUser);
-// router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword);
+router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword);
 
 router.route('/:id').get(authenticateUser, getSingleUser);
 
