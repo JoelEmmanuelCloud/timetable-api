@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import notFoundMiddleware from './middleware/not-found';
 import errorHandlerMiddleware from './middleware/error-handler';
 import authRouter from './routes/auth-route';
-import userRouter from './routes/user-route'
+import userRouter from './routes/user-route';
 import morgan from 'morgan';
 
 dotenv.config();
