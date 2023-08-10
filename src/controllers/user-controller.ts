@@ -1,6 +1,6 @@
 import { handleAsyncError } from '../middleware';
 import { StatusCodes } from 'http-status-codes';
-import { Request, Response, NextFunction } from 'express';
+import { Response } from 'express';
 import CustomError from '../errors';
 import User from '../models/user';
 import { ExtendedRequest } from '../interfaces';
@@ -11,73 +11,59 @@ import {
 } from '../utils';
 
 const getAllUsers = async (req: ExtendedRequest, res: Response): Promise<void> => {
-    try {
-        const users = await User.find({
-            academyRole: { $in: ['lecturer', 'student'] },
-        }).select('-password');
+  await handleAsyncError(async () => {
+      const users = await User.find({
+          academyRole: { $in: ['lecturer', 'student'] },
+      }).select('-password');
 
-        res.status(StatusCodes.OK).json({ users });
-    } catch (error) {
-        console.error(error);
-
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            error: error instanceof Error ? error.message : 'An error occurred',
-        });
-    }
+      res.status(StatusCodes.OK).json({ users });
+  }, res);
 };
+
 
 const getSingleUser = async (
-    req: ExtendedRequest,
-    res: Response,
+  req: ExtendedRequest,
+  res: Response,
 ): Promise<void> => {
-    try {
-        const user = await User.findOne({ _id: req.params.id }).select(
-            '-password',
-        );
-        if (!user) {
-            throw new CustomError.NotFoundError(
-                `No user with id : ${req.params.id}`,
-            );
-        }
+  await handleAsyncError(async () => {
+      const user = await User.findOne({ _id: req.params.id }).select(
+          '-password',
+      );
 
-        if (!req.user) {
-            throw new CustomError.UnauthenticatedError(
-                'User not authenticated',
-            );
-        }
+      if (!user) {
+          throw new CustomError.NotFoundError(
+              `No user with id : ${req.params.id}`,
+          );
+      }
 
-        checkPermissions(req.user, user._id);
-        res.status(StatusCodes.OK).json({ user });
-    } catch (error: any) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            error: error.message,
-        });
-    }
+      if (!req.user) {
+          throw new CustomError.UnauthenticatedError(
+              'User not authenticated',
+          );
+      }
+
+      checkPermissions(req.user, user._id);
+
+      res.status(StatusCodes.OK).json({ user });
+  }, res);
 };
+
 
 const showCurrentUser = async (
-    req: ExtendedRequest,
-    res: Response,
+  req: ExtendedRequest,
+  res: Response,
 ): Promise<void> => {
-    try {
-        if (!req.user) {
-            throw new CustomError.UnauthenticatedError(
-                'User not authenticated',
-            );
-        }
+  await handleAsyncError(async () => {
+      if (!req.user) {
+          throw new CustomError.UnauthenticatedError(
+              'User not authenticated',
+          );
+      }
 
-        res.status(StatusCodes.OK).json({ user: req.user});
-    } catch (error) {
-        
-        if (error instanceof CustomError.UnauthenticatedError) {
-            res.status(StatusCodes.UNAUTHORIZED).json({ error: error.message });
-        } else {
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                error: 'An error occurred',
-            });
-        }
-    }
+      res.status(StatusCodes.OK).json({ user: req.user });
+  }, res);
 };
+
 
 const updateUser = async (req: ExtendedRequest, res: Response): Promise<void> => {
   await handleAsyncError(async () => {
