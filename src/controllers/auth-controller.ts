@@ -75,7 +75,7 @@ const login = async (req: Request, res: Response) => {
         attachCookiesToResponse({ res, user: tokenUser });
         const token = req.signedCookies.token;
 
-        res.status(StatusCodes.OK).json({ token, user: tokenUser });
+        res.status(StatusCodes.OK).json({user: tokenUser });
     } catch (error) {
         console.error(error);
         if (error instanceof CustomError.BadRequestError) {

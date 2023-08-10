@@ -1,3 +1,4 @@
+import { handleAsyncError } from '../middleware';
 import { StatusCodes } from 'http-status-codes';
 import { Request, Response, NextFunction } from 'express';
 import CustomError from '../errors';
@@ -78,77 +79,80 @@ const showCurrentUser = async (
     }
 };
 
-// const updateUser = async (req: Request, res: Response): Promise<void> => {
-//   const { email, name } = req.body;
-//   if (!email || !name) {
-//     throw new CustomError.BadRequestError('Please provide all values');
-//   }
+const updateUser = async (req: ExtendedRequest, res: Response): Promise<void> => {
+  await handleAsyncError(async () => {
+      const { email, name } = req.body;
+      if (!email || !name) {
+          throw new CustomError.BadRequestError('Please provide all values');
+      }
 
-//   if (!req.user) {
-//     throw new CustomError.UnauthenticatedError('User not authenticated');
-//   }
+      if (!req.user) {
+          throw new CustomError.UnauthenticatedError('User not authenticated');
+      }
 
-//   const user = await User.findOne({ _id: req.user.userId });
+      const userId = req.user._id;
 
-//   if (!user) {
-//     throw new CustomError.NotFoundError('User not found');
-//   }
+      const user = await User.findOne({ _id: userId });
 
-//   user.email = email;
-//   user.name = name;
+      if (!user) {
+          throw new CustomError.NotFoundError('User not found');
+      }
 
-//   await user.save();
+      user.email = email;
+      user.name = name;
 
-//   const tokenUser = createTokenUser(user);
-//   attachCookiesToResponse({ res, user: tokenUser });
-//   res.status(StatusCodes.OK).json({ user: tokenUser });
-// };
+      await user.save();
+
+      const userObject = user.toJSON();
+      const tokenUser = createTokenUser(userObject);
+      attachCookiesToResponse({ res, user: tokenUser });
+      
+      res.status(StatusCodes.OK).json({ user: tokenUser });
+  }, res);
+};
+
+
 
 const updateUserPassword = async (
-    req: ExtendedRequest,
-    res: Response,
+  req: ExtendedRequest,
+  res: Response,
 ): Promise<void> => {
-    try {
-        const { oldPassword, newPassword } = req.body;
-        if (!oldPassword || !newPassword) {
-            throw new CustomError.BadRequestError('Please provide both values');
-        }
+  await handleAsyncError(async () => {
+      const { oldPassword, newPassword } = req.body;
+      if (!oldPassword || !newPassword) {
+          throw new CustomError.BadRequestError('Please provide both values');
+      }
 
-        if (!req.user) {
-            throw new CustomError.UnauthenticatedError(
-                'User not authenticated',
-            );
-        }
-        const userId = req.user._id;
-        const user = await User.findOne({ _id: userId });
+      if (!req.user) {
+          throw new CustomError.UnauthenticatedError(
+              'User not authenticated',
+          );
+      }
 
-        if (!user) {
-            console.log(user);
-            console.log(req.user);
-            console.log(req.user._id);
-            throw new CustomError.NotFoundError('User not found');
-        }
+      const userId = req.user._id;
+      const user = await User.findOne({ _id: userId });
 
-        const isPasswordCorrect = await user.comparePassword(oldPassword);
-        if (!isPasswordCorrect) {
-            throw new CustomError.UnauthenticatedError('Invalid Credentials');
-        }
+      if (!user) {
+          throw new CustomError.NotFoundError('User not found');
+      }
 
-        user.password = newPassword;
+      const isPasswordCorrect = await user.comparePassword(oldPassword);
+      if (!isPasswordCorrect) {
+          throw new CustomError.UnauthenticatedError('Invalid Credentials');
+      }
 
-        await user.save();
-        res.status(StatusCodes.OK).json({ msg: 'Success! Password Updated.' });
-    } catch (error: any) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            error: error.message,
-        });
-    }
+      user.password = newPassword;
+
+      await user.save();
+      res.status(StatusCodes.OK).json({ msg: 'Success! Password Updated.' });
+  }, res);
 };
+
 
 export {
     getAllUsers,
     getSingleUser,
     showCurrentUser,
-    //   updateUser,
+      updateUser,
     updateUserPassword,
 };
