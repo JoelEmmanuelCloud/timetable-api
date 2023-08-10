@@ -20,9 +20,9 @@ const authenticateUser = async (
     }
 
     try {
-        const { name, userId, academyRole } = isTokenValid({ token });
+        const { name, _id, academyRole } = isTokenValid({ token });
 
-        req.user = { name, userId, academyRole };
+        req.user = { name, _id, academyRole };
         next();
     } catch (error) {
         res.status(StatusCodes.UNAUTHORIZED).json({

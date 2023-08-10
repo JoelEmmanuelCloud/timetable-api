@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { Response, User } from '../interfaces';
+import { User } from '../interfaces';
+import { Response } from 'express';
 
 type Payload = User;
 

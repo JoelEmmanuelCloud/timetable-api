@@ -9,7 +9,7 @@ import {
     checkPermissions,
 } from '../utils';
 
-const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+const getAllUsers = async (req: ExtendedRequest, res: Response): Promise<void> => {
     try {
         const users = await User.find({
             academyRole: { $in: ['lecturer', 'student'] },
@@ -65,9 +65,9 @@ const showCurrentUser = async (
             );
         }
 
-        res.status(StatusCodes.OK).json({ user: req.user });
+        res.status(StatusCodes.OK).json({ user: req.user});
     } catch (error) {
-        console.error(error);
+        
         if (error instanceof CustomError.UnauthenticatedError) {
             res.status(StatusCodes.UNAUTHORIZED).json({ error: error.message });
         } else {
@@ -119,13 +119,13 @@ const updateUserPassword = async (
                 'User not authenticated',
             );
         }
-        const userId = req.user.userId;
+        const userId = req.user._id;
         const user = await User.findOne({ _id: userId });
 
         if (!user) {
             console.log(user);
             console.log(req.user);
-            console.log(req.user.userId);
+            console.log(req.user._id);
             throw new CustomError.NotFoundError('User not found');
         }
 

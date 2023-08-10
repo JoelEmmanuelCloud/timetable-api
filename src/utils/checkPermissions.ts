@@ -4,7 +4,7 @@ import { User as IUser, AcademyRole } from '../interfaces';
 
 const checkPermissions = (requestUser: IUser, resourceUserId: string): void => {
     if (requestUser.academyRole === AcademyRole.TimetableOfficer) return;
-    if (requestUser.userId === resourceUserId) return;
+    if (requestUser._id === resourceUserId) return;
     throw new CustomError.UnauthorizedError(
         'Not authorized to access this route',
     );

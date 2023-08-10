@@ -17,6 +17,6 @@ export interface IUser extends Document {
 
 export interface User {
     name: string;
-    userId: string;
+    _id: string;
     academyRole: AcademyRole;
 }
