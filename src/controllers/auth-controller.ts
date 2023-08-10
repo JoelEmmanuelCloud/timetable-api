@@ -47,7 +47,6 @@ const register = async (req: Request, res: Response): Promise<void> => {
     }, res);
 };
 
-
 const login = async (req: Request, res: Response) => {
     await handleAsyncError(async () => {
         const { email, password } = req.body;
@@ -76,7 +75,6 @@ const login = async (req: Request, res: Response) => {
         res.status(StatusCodes.OK).json({ user: tokenUser });
     }, res);
 };
-
 
 const logout = async (req: Request, res: Response) => {
     res.cookie('token', 'logout', {
