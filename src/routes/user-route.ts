@@ -3,7 +3,7 @@ import {
     getAllUsers,
     getSingleUser,
     showCurrentUser,
-    // updateUser,
+    updateUser,
     updateUserPassword,
 } from '../controllers/user-controller';
 import {
@@ -23,7 +23,7 @@ router
     );
 
 router.route('/showUser').get(authenticateUser, showCurrentUser);
-// router.route('/updateUser').patch(authenticateUser, updateUser);
+router.route('/updateUser').patch(authenticateUser, updateUser);
 router.route('/updateUserPassword').patch(authenticateUser, updateUserPassword);
 
 router.route('/:id').get(authenticateUser, getSingleUser);
