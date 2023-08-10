@@ -1,3 +1,4 @@
+import { handleAsyncError } from '../middleware';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { attachCookiesToResponse, createTokenUser } from '../utils';
@@ -8,7 +9,7 @@ import { AcademyRole } from '../interfaces';
 const register = async (req: Request, res: Response): Promise<void> => {
     const { name, email, password, academyRole } = req.body;
 
-    try {
+    await handleAsyncError(async () => {
         const emailAlreadyExists = await User.findOne({ email });
         if (emailAlreadyExists) {
             throw new CustomError.BadRequestError('Email already exists');
@@ -43,15 +44,12 @@ const register = async (req: Request, res: Response): Promise<void> => {
         attachCookiesToResponse({ res, user: tokenUser });
 
         res.status(StatusCodes.CREATED).json({ user: userObject });
-    } catch (error: any) {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-            error: error.message,
-        });
-    }
+    }, res);
 };
 
+
 const login = async (req: Request, res: Response) => {
-    try {
+    await handleAsyncError(async () => {
         const { email, password } = req.body;
 
         if (!email || !password) {
@@ -75,20 +73,10 @@ const login = async (req: Request, res: Response) => {
         attachCookiesToResponse({ res, user: tokenUser });
         const token = req.signedCookies.token;
 
-        res.status(StatusCodes.OK).json({user: tokenUser });
-    } catch (error) {
-        console.error(error);
-        if (error instanceof CustomError.BadRequestError) {
-            res.status(StatusCodes.BAD_REQUEST).json({ error: error.message });
-        } else if (error instanceof CustomError.UnauthenticatedError) {
-            res.status(StatusCodes.UNAUTHORIZED).json({ error: error.message });
-        } else {
-            res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-                error: 'An error occurred',
-            });
-        }
-    }
+        res.status(StatusCodes.OK).json({ user: tokenUser });
+    }, res);
 };
+
 
 const logout = async (req: Request, res: Response) => {
     res.cookie('token', 'logout', {
