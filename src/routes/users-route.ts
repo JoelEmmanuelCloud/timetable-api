@@ -6,10 +6,7 @@ import {
     updateUser,
     updateUserPassword,
 } from '../controllers/users-controller';
-import {
-    authenticateUser,
-    authorizePermissions,
-} from '../middleware';
+import { authenticateUser, authorizePermissions } from '../middleware';
 import { AcademyRole } from '../interfaces';
 
 const router = express.Router();
