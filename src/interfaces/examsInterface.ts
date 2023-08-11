@@ -3,6 +3,7 @@ import { Document } from 'mongoose';
 export interface Exam {
     date: string;
     day: string;
+    level: string;
     morning?: {
         course: string[] | string;
         time: string;

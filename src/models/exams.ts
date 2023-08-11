@@ -4,6 +4,7 @@ import { ExamDocument } from "../interfaces";
 const ExamSchema = new mongoose.Schema({
     date: String,
     day: String,
+    level: String,
     morning: {
         course: [String],
         time: String,
