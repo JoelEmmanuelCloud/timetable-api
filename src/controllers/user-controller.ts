@@ -2,7 +2,7 @@ import { handleAsyncError } from '../middleware';
 import { StatusCodes } from 'http-status-codes';
 import { Response } from 'express';
 import CustomError from '../errors';
-import User from '../models/user';
+import User from '../models/users';
 import { ExtendedRequest } from '../interfaces';
 import {
     createTokenUser,

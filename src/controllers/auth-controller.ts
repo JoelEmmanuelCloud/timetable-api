@@ -2,7 +2,7 @@ import { handleAsyncError } from '../middleware';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { attachCookiesToResponse, createTokenUser } from '../utils';
-import User from '../models/user';
+import User from '../models/users';
 import CustomError from '../errors';
 import { AcademyRole } from '../interfaces';
 
