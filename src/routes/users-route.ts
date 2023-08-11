@@ -5,11 +5,11 @@ import {
     showCurrentUser,
     updateUser,
     updateUserPassword,
-} from '../controllers/user-controller';
+} from '../controllers/users-controller';
 import {
     authenticateUser,
     authorizePermissions,
-} from '../middleware/authentication';
+} from '../middleware';
 import { AcademyRole } from '../interfaces';
 
 const router = express.Router();
