@@ -1,6 +1,6 @@
 import express from "express";
 
-import {addExam, getAllExams} from "../controllers/exams-controller";
+import {addExam, getAllExams, getExamsByLevel} from "../controllers/exams-controller";
 
 import {
     authenticateUser,
@@ -26,5 +26,12 @@ router
         authorizePermissions(AcademyRole.TimetableOfficer),
         getAllExams,
     );
+    router
+    .route('/getExamsByLevel')
+    .get(
+        authenticateUser,
+        authorizePermissions(AcademyRole.TimetableOfficer),
+        getExamsByLevel,
+    )
 
 export default router;
